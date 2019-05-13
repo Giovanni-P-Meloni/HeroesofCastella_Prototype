@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TurnManager : MonoBehaviour
 {
-
+    //--------------------Singleton------------------//
     public static TurnManager instance;
     public static TurnManager Instance
     {
@@ -28,9 +28,12 @@ public class TurnManager : MonoBehaviour
 
     private void Awake()
     {
-        if (TurnManager.Instance != null)
-            Destroy(this);
+       // Tirando esse comentario, os ids dos battlers se repetem
+       // if (TurnManager.Instance != null)
+       //     Destroy(this);
     }
+
+    //----------------------------------------//
 
     [SerializeField]
     private int maxNBattlers = 6;

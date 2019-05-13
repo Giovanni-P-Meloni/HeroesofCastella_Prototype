@@ -14,7 +14,7 @@ public class Controller : NetworkBehaviour
         info.decision = DecisionType.Player;
         for(int i = 0; i < 3; i++){
             if(isLocalPlayer)
-                CmdInstantiateBattler(info);
+                CmdInstantiateBattler(info, i);
         }
     }
     public GameObject battlerPrefab;
@@ -33,17 +33,21 @@ public class Controller : NetworkBehaviour
                 break;
             }
         }
-        foreach(GameObject go in GameObject.FindGameObjectsWithTag("BattleButton")){
-            go.SetActive(true);
-        }
+        Debug.Log("O Battler " + currentBattler.id + " ira liberar seu menu");
+
+        currentBattler.myCanvas.SetActive(true);
+
+        //foreach(GameObject go in GameObject.FindGameObjectsWithTag("BattleButton")){
+        //    go.SetActive(true);
+        //}
         // Configura os botoes de acordo com as skills do battler
         // To do: consertar essa bagunça
     }
 
 
     [Command]
-    public void CmdInstantiateBattler(BattlerInfo info){
-        GameObject go = Instantiate(battlerPrefab);
+    public void CmdInstantiateBattler(BattlerInfo info, int indexPosicao){
+        GameObject go = Instantiate(battlerPrefab, new Vector3(indexPosicao*3f, 0, this.netId*1), Quaternion.identity);
         Battler btlr = go.GetComponent<Battler>();
         btlr.hp = info.HP;
         btlr.attack = info.attack;
@@ -53,7 +57,7 @@ public class Controller : NetworkBehaviour
             go.GetComponent<PlayerDecision>().myController = this;
         }else{
         }
-        NetworkServer.Spawn(go);
+        NetworkServer.SpawnWithClientAuthority(go, connectionToClient);
         TurnManager.Instance.AddBattler(go.GetComponent<Battler>());
     }
 }

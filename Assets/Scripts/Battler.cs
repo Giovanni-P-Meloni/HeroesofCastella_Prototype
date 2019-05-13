@@ -5,6 +5,8 @@ using Mirror;
 
 public class Battler : NetworkBehaviour
 {
+    public GameObject canvas;
+    public GameObject myCanvas;
     public int hp;
     public int attack;
     public int defense;
@@ -14,20 +16,28 @@ public class Battler : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        //Gambiarra
+        //instancia seu botao
+        GameObject obj = Instantiate(canvas);
+        obj.GetComponent<BattlerButton>().myBattler = this;
+        obj.SetActive(false);
+        myCanvas = obj;
         
     }
 
     [Client]
     public void OnButtonPressed(){
-        GetComponent<PlayerDecision>().CmdReturnDecision();
+        //Gambiarra: para fechar o menu de escolha
+        myCanvas.SetActive(false);
+        CmdReturnDecision();
     }
 
+    [Command]
+    public void CmdReturnDecision()
+    {
+        GetComponent<PlayerDecision>().CmdReturnDecision();
+    }
+    
     // Gambiarra
     public int TakeDamage(int atk){
         hp -= (atk - defense);
